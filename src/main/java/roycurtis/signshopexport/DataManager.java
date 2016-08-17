@@ -127,7 +127,7 @@ class DataManager implements Runnable
         }
 
         currentOp = Operation.Init;
-        LOGGER.info( "Json file exported to " + outputFile.getAbsolutePath() );
+        LOGGER.fine( "Json file exported to " + outputFile.getAbsolutePath() );
         LOGGER.fine("Scheduling next export in " + CONFIG.exportInterval * 20 + " ticks");
         SERVER.getScheduler().runTaskLater(PLUGIN, this, CONFIG.exportInterval * 20);
     }
