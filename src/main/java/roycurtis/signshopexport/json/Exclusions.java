@@ -26,6 +26,11 @@ public class Exclusions implements ExclusionStrategy
     public boolean shouldSkipClass(Class<?> clazz)
     {
         String name = clazz.getSimpleName();
+
+        if ( name.equalsIgnoreCase("ItemStack") )
+        if ( clazz.getTypeName().startsWith("net.minecraft.server") )
+            return true;
+
         return name.equalsIgnoreCase("ChatComponentText");
     }
 }
