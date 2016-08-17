@@ -1,7 +1,6 @@
 package roycurtis.signshopexport;
 
 import org.bukkit.Server;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.wargamer2010.signshop.SignShop;
 
@@ -10,16 +9,18 @@ import java.util.logging.Logger;
 /** Core class of the SignShopExport plugin. Handles listener creation */
 public class SignShopExport extends JavaPlugin
 {
-    static Logger      LOGGER;
-    static Config      CONFIG;
-    static Server      SERVER;
-    static DataManager DATAMANAGER;
+    static SignShopExport PLUGIN;
+    static Logger         LOGGER;
+    static Config         CONFIG;
+    static Server         SERVER;
+    static DataManager    DATAMANAGER;
 
     SignShop signShop;
 
     @Override
     public void onLoad()
     {
+        PLUGIN = this;
         LOGGER = getLogger();
     }
 
@@ -29,10 +30,10 @@ public class SignShopExport extends JavaPlugin
         signShop = (SignShop) getServer().getPluginManager().getPlugin("SignShop");
 
         SERVER      = this.getServer();
-        CONFIG      = new Config(this);
-        DATAMANAGER = new DataManager(this);
+        CONFIG      = new Config();
+        DATAMANAGER = new DataManager();
 
-        LOGGER.fine("Plugin fully enabled; listening for SignShop events");
+        LOGGER.info("To reload this plugin, simply reload SignShop");
     }
 
     @Override
@@ -40,8 +41,7 @@ public class SignShopExport extends JavaPlugin
     {
         CONFIG      = null;
         DATAMANAGER = null;
-
-        HandlerList.unregisterAll(this);
-        LOGGER.fine("Plugin fully disabled; listeners unregistered");
+        SERVER.getScheduler().cancelTasks(this);
+        LOGGER.fine("All managers released and tasks cancelled");
     }
 }
