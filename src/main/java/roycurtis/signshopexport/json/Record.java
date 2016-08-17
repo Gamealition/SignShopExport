@@ -17,6 +17,7 @@ public class Record
 
     // Owner
     public String ownerName;
+    public String ownerUuid;
 
     // Sign data
     public String signType;
@@ -37,6 +38,7 @@ public class Record
         rec.locZ     = loc.getBlockZ();
 
         rec.ownerName = sign.getOwner().getName();
+        rec.ownerUuid = sign.getOwner().GetIdentifier().getStringIdentifier();
 
         rec.signType  = sign.getOperation();
         rec.signPrice = economyUtil.parsePrice(((Sign) sign.getSign().getState()).getLine(3));
