@@ -82,11 +82,20 @@ class DataManager implements Runnable
     /** Spends one server tick to serialize one sign */
     private void doSerialize()
     {
-        Seller      sign     = signs[current];
-        Record      signRec  = Record.fromSeller(sign);
-        JsonElement signJson = gson.toJsonTree(signRec);
+        try
+        {
+            Seller      sign     = signs[current];
+            Record      signRec  = Record.fromSeller(sign);
+            JsonElement signJson = gson.toJsonTree(signRec);
 
-        dataSet.add(signJson);
+            dataSet.add(signJson);
+        }
+        catch (Exception e)
+        {
+            LOGGER.info("Skipping sign " + current + " as it failed to serialize. " +
+                "This is likely because it was changed mid-process");
+        }
+
         current++;
 
         if (current >= total)
