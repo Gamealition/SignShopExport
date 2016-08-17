@@ -1,4 +1,4 @@
 # SignShopExport configuration file
 
 # Path of data file to export, relative to plugin directory. Can be absolute. (default: data.json)
-outputFile: "data.json"
+outputPath: "data.json"
