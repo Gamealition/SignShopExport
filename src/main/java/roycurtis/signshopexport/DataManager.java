@@ -13,12 +13,11 @@ import roycurtis.signshopexport.json.TypeAdapters;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
 
 import static roycurtis.signshopexport.SignShopExport.*;
 
 /**
- * Manager class for collecting, tracking and saving SignShop data
+ * Manager class for collecting, serializing and saving SignShop data
  */
 class DataManager implements Runnable
 {
@@ -76,10 +75,10 @@ class DataManager implements Runnable
 
         LOGGER.fine("Beginning JSON export of " + total + " entries (1 per tick)");
         currentOp = Operation.Serializing;
-        SERVER.getScheduler().runTask(PLUGIN, this);
+        SERVER.getScheduler().runTaskLater(PLUGIN, this, 2);
     }
 
-    /** Spends one server tick to serialize one sign */
+    /** Serializes one sign every two ticks */
     private void doSerialize()
     {
         try
@@ -106,7 +105,7 @@ class DataManager implements Runnable
         else if (current % 10 == 0)
             LOGGER.finer( current + "/" + total + " signs serialized" );
 
-        SERVER.getScheduler().runTask(PLUGIN, this);
+        SERVER.getScheduler().runTaskLater(PLUGIN, this, 2);
     }
 
     /** Export all the processed shop data and schedule next export */
