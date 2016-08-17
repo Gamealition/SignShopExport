@@ -10,8 +10,11 @@ public class Exclusions implements ExclusionStrategy
     {
         String name = f.getName();
 
-        // Ignore book page contents
-        return name.equalsIgnoreCase("pages")
+        return
+            // Ignore dynamic CraftBukkit handle field
+            name.equalsIgnoreCase("handle")
+            // Ignore book page contents
+            || name.equalsIgnoreCase("pages")
             // Ignore unsupported tags
             || name.equalsIgnoreCase("unhandledTags")
             // Ignore redundant data object
