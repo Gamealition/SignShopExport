@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import org.wargamer2010.signshop.Seller;
+import org.wargamer2010.signshop.events.SSCreatedEvent;
 import org.wargamer2010.signshop.util.economyUtil;
 import org.wargamer2010.signshop.util.itemUtil;
 
@@ -52,6 +53,57 @@ public class Record
             case "sell":
             case "isell":
                 rec.invInStock = itemUtil.stockOKForContainables(sign.getContainables(), sign.getItems(), false);
+                break;
+            default:
+                rec.invInStock = true;
+                break;
+        }
+
+        return rec;
+    }
+
+    static Record fromEvent(SSCreatedEvent event)
+    {
+        Record   rec = new Record();
+        Location loc = event.getSign().getLocation();
+
+        rec.locWorld = loc.getWorld().getName();
+        rec.locX     = loc.getBlockX();
+        rec.locY     = loc.getBlockY();
+        rec.locZ     = loc.getBlockZ();
+
+        rec.ownerName = event.getPlayer().getName();
+
+        rec.signType  = event.getOperation();
+        rec.signPrice = economyUtil.parsePrice(((Sign) event.getSign().getState()).getLine(3));
+
+        rec.invItems = event.getItems();
+
+        // This is necessary as the event's items are CraftItemStack type. That type does
+        // not populate its private fields, thus is useless to Gson.
+        ItemStack[] plainStack = new ItemStack[rec.invItems.length];
+        for (int i = 0; i < rec.invItems.length; i++)
+        {
+            ItemStack item = rec.invItems[i];
+
+            plainStack[i] = new ItemStack(
+                item.getType(), item.getAmount(), item.getDurability());
+
+            plainStack[i].setData(item.getData());
+            plainStack[i].setItemMeta(item.getItemMeta());
+        }
+
+        rec.invItems = plainStack;
+
+        switch(rec.signType)
+        {
+            case "buy":
+            case "ibuy":
+                rec.invInStock = itemUtil.stockOKForContainables(event.getContainables(), event.getItems(), true);
+                break;
+            case "sell":
+            case "isell":
+                rec.invInStock = itemUtil.stockOKForContainables(event.getContainables(), event.getItems(), false);
                 break;
             default:
                 rec.invInStock = true;

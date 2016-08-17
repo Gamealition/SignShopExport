@@ -20,10 +20,12 @@ public class TypeAdapters implements TypeAdapterFactory
         String name = type.getRawType().getSimpleName();
 
         // org.bukkit.craftbukkit.v1_10_R1.inventory.CraftMetaItem.EnchantmentMap
+        // Needed because Gson does not serialize this very nicely
         if ( name.equalsIgnoreCase("EnchantmentMap") )
             return new JsonEnchantmentMap<>();
 
         // org.bukkit.craftbukkit.v1_10_R1.inventory.CraftMetaEnchantedBook
+        // Needed because Gson chokes on duplicate `enchantments` field
         if ( name.equalsIgnoreCase("CraftMetaEnchantedBook") )
             return new JsonCraftMetaEnchantedBook<>();
 
