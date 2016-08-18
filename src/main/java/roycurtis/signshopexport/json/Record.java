@@ -20,8 +20,9 @@ public class Record
     public String ownerUuid;
 
     // Sign data
-    public String signType;
-    public double signPrice;
+    public String[] signText;
+    public String   signType;
+    public double   signPrice;
 
     // Inventory data
     public ItemStack[] invItems;
@@ -29,8 +30,9 @@ public class Record
 
     public static Record fromSeller(Seller sign)
     {
-        Record   rec = new Record();
-        Location loc = sign.getSignLocation();
+        Record   rec   = new Record();
+        Location loc   = sign.getSignLocation();
+        Sign     state = (Sign) sign.getSign().getState();
 
         rec.locWorld = loc.getWorld().getName();
         rec.locX     = loc.getBlockX();
@@ -41,7 +43,8 @@ public class Record
         rec.ownerUuid = sign.getOwner().GetIdentifier().getStringIdentifier();
 
         rec.signType  = sign.getOperation();
-        rec.signPrice = economyUtil.parsePrice(((Sign) sign.getSign().getState()).getLine(3));
+        rec.signPrice = economyUtil.parsePrice(state.getLine(3));
+        rec.signText  = new String[] { state.getLine(1), state.getLine(2) };
 
         rec.invItems = sign.getItems();
 
