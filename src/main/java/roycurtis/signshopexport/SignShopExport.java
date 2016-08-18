@@ -32,7 +32,7 @@ public class SignShopExport extends JavaPlugin
         SERVER      = this.getServer();
         CONFIG      = new Config();
         DATAMANAGER = new DataManager();
-
+        DATAMANAGER.run();
         LOGGER.info("To reload this plugin, simply reload SignShop");
     }
 

@@ -48,8 +48,6 @@ class DataManager implements Runnable
 
         if ( outputFile.exists() && !outputFile.isFile() )
             throw new RuntimeException("outputPath config points to a directory/invalid file");
-
-        run();
     }
 
     /** Generates data file of entire SignShop database across server ticks */
