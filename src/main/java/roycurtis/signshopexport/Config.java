@@ -5,9 +5,7 @@ import org.bukkit.configuration.Configuration;
 import static roycurtis.signshopexport.SignShopExport.LOGGER;
 import static roycurtis.signshopexport.SignShopExport.PLUGIN;
 
-/**
- * Container class for plugin's configuration values
- */
+/** Container and manager class for plugin's configuration values */
 class Config
 {
     Configuration config;
@@ -15,7 +13,7 @@ class Config
     /** Path of data file to export, relative to server directory or absolute */
     String exportPath     = "plugins/SignShopExport/data.json";
     /** Seconds between each export */
-    int exportInterval = 1800;
+    int    exportInterval = 1800;
 
     Config()
     {

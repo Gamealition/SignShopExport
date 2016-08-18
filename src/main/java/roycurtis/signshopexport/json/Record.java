@@ -7,6 +7,7 @@ import org.wargamer2010.signshop.Seller;
 import org.wargamer2010.signshop.util.economyUtil;
 import org.wargamer2010.signshop.util.itemUtil;
 
+/** Represents a JSON record for a SignShop, for serialization */
 public class Record
 {
     // Location
@@ -28,6 +29,7 @@ public class Record
     public ItemStack[] invItems;
     public boolean     invInStock;
 
+    /** Creates a record from a SignShop "seller", using SignShop's utility functions for data */
     public static Record fromSeller(Seller sign)
     {
         Record   rec   = new Record();
@@ -68,11 +70,13 @@ public class Record
         {
             case "buy":
             case "ibuy":
-                rec.invInStock = itemUtil.stockOKForContainables(sign.getContainables(), sign.getItems(), true);
+                rec.invInStock = itemUtil.stockOKForContainables(
+                    sign.getContainables(), sign.getItems(), true);
                 break;
             case "sell":
             case "isell":
-                rec.invInStock = itemUtil.stockOKForContainables(sign.getContainables(), sign.getItems(), false);
+                rec.invInStock = itemUtil.stockOKForContainables(
+                    sign.getContainables(), sign.getItems(), false);
                 break;
             default:
                 rec.invInStock = true;

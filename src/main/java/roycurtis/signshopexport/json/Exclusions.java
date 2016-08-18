@@ -3,6 +3,7 @@ package roycurtis.signshopexport.json;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 
+/** Exclusions class for blacklisting objects and fields in Gson */
 public class Exclusions implements ExclusionStrategy
 {
     @Override

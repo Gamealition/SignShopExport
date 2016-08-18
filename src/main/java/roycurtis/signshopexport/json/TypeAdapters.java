@@ -12,6 +12,12 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import java.io.IOException;
 import java.util.TreeMap;
 
+/**
+ * Adapter classes for explaining to Gson how to serialize some Minecraft objects.
+ *
+ * This uses a TypeAdapterFactory because sometimes we have to deal with CraftBukkit or native
+ * Minecraft classes. We can't refer to these using generics, because we only use Bukkit API here.
+ */
 public class TypeAdapters implements TypeAdapterFactory
 {
     @Override
@@ -59,10 +65,8 @@ public class TypeAdapters implements TypeAdapterFactory
         }
 
         @Override
-        public T read(JsonReader in) throws IOException
-        {
-            return null;
-        }
+        /** Not necessary; we're never going to read these */
+        public T read(JsonReader in) throws IOException { return null; }
     }
 
     class JsonCraftMetaEnchantedBook <T> extends TypeAdapter<T>
@@ -107,9 +111,7 @@ public class TypeAdapters implements TypeAdapterFactory
         }
 
         @Override
-        public T read(JsonReader in) throws IOException
-        {
-            return null;
-        }
+        /** Not necessary; we're never going to read these */
+        public T read(JsonReader in) throws IOException { return null; }
     }
 }

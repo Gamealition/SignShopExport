@@ -2,34 +2,29 @@ package roycurtis.signshopexport;
 
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.wargamer2010.signshop.SignShop;
 
 import java.util.logging.Logger;
 
-/** Core class of the SignShopExport plugin. Handles listener creation */
+/** Core class of the SignShopExport plugin. Handles manager creation and reload. */
 public class SignShopExport extends JavaPlugin
 {
     static SignShopExport PLUGIN;
     static Logger         LOGGER;
-    static Config         CONFIG;
     static Server         SERVER;
+    static Config         CONFIG;
     static DataManager    DATAMANAGER;
-
-    SignShop signShop;
 
     @Override
     public void onLoad()
     {
         PLUGIN = this;
         LOGGER = getLogger();
+        SERVER = this.getServer();
     }
 
     @Override
     public void onEnable()
     {
-        signShop = (SignShop) getServer().getPluginManager().getPlugin("SignShop");
-
-        SERVER      = this.getServer();
         CONFIG      = new Config();
         DATAMANAGER = new DataManager();
         DATAMANAGER.run();

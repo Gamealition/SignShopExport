@@ -17,7 +17,13 @@ import java.io.IOException;
 import static roycurtis.signshopexport.SignShopExport.*;
 
 /**
- * Manager class for collecting, serializing and saving SignShop data
+ * Manager class for collecting, serializing and exporting SignShop data.
+ *
+ * This manager runs it self in a loop using Bukkit's scheduler. This is so it can spread the task
+ * of serializing so many signs across server ticks, rather than cause lag spikes every so often.
+ *
+ * If the plugin is reloaded or otherwise needs to stop, this manager is safely stopped without any
+ * state corruption or cleanup needed.
  */
 class DataManager implements Runnable
 {
@@ -53,8 +59,6 @@ class DataManager implements Runnable
     /** Generates data file of entire SignShop database across server ticks */
     public void run()
     {
-        LOGGER.finest("Running DataManager task for operation: " + currentOp);
-
         switch (currentOp)
         {
             case Init:        doInit();      break;

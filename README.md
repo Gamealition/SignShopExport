@@ -6,6 +6,25 @@ a public database of shops, using a friendlier and more comprehensive format tha
 * [Downloads](https://github.com/Gamealition/SignShopExport/releases)
 * [BukkitDev](http://dev.bukkit.org/bukkit-plugins/signshopexport/)
 
+# Usage
+
+Simply place into your server's `plugins` directory. As long as you also have SignShop 2.11.0 or
+higher, SignShopExport will immediately begin exporting data to the configured JSON file. When it
+is done, it will wait until the next interval to export again.
+
+You can set the `exportPath` to somewhere web accessible (e.g. `/var/www`) or you can just create
+a symbolic link to the JSON file itself (e.g. `ln -s /var/mc/data.json /var/www/signshop.json`).
+
+If you need to reload SignShopExport, just reloading SignShop will suffice: `/signshop reload`.
+Reloading the plugin will cause an immediate export and restart the timer.
+
+## Config
+
+There's only one config file, found at `plugins/SignShopExport/config.yml` with these options:
+
+* `exportPath` - Path of data file to export, relative to server directory. Can be absolute.
+* `exportInterval` - Seconds between each export, with a minimum of 5 seconds.
+
 # Building
 
 SignShopExport uses Maven for dependency management and building. These instructions are simply for
