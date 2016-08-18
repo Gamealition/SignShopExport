@@ -39,7 +39,7 @@ class DataManager implements Runnable
 
     DataManager()
     {
-        outputFile = new File(PLUGIN.getDataFolder(), CONFIG.exportPath);
+        outputFile = new File(CONFIG.exportPath);
         gson       = new GsonBuilder()
             .addSerializationExclusionStrategy( new Exclusions() )
             .registerTypeAdapterFactory( new TypeAdapters() )

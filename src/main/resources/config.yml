@@ -1,7 +1,8 @@
 # SignShopExport configuration file
 
-# Path of data file to export, relative to plugin directory. Can be absolute. (default: data.json)
-exportPath: "data.json"
+# Path of data file to export, relative to server directory. Can be absolute.
+# (default: plugins/SignShopExport/data.json)
+exportPath: "plugins/SignShopExport/data.json"
 
 # Seconds between each export (default: 1800, or 30 minutes)
 exportInterval: 1800

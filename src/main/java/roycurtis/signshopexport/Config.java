@@ -12,8 +12,8 @@ class Config
 {
     Configuration config;
 
-    /** Path of data file to export, relative to plugin directory */
-    String exportPath = "data.json";
+    /** Path of data file to export, relative to server directory or absolute */
+    String exportPath     = "plugins/SignShopExport/data.json";
     /** Seconds between each export */
     int exportInterval = 1800;
 
@@ -24,7 +24,7 @@ class Config
 
         config = PLUGIN.getConfig();
 
-        exportPath     = config.getString("exportPath",     exportPath);
+        exportPath     = config.getString("exportPath", exportPath);
         exportInterval = config.getInt("exportInterval", exportInterval);
 
         if (exportInterval < 5)
