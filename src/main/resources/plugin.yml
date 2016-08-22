@@ -4,4 +4,4 @@ description: ${project.description}
 authors:     [RoyCurtis]
 website:     https://github.com/Gamealition/SignShopExport
 main:        roycurtis.signshopexport.SignShopExport
-depend:      [SignShop]
+softdepend:  [SignShop, QuickShop]

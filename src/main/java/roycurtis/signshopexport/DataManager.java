@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import org.wargamer2010.signshop.Seller;
-import org.wargamer2010.signshop.configuration.Storage;
 import roycurtis.signshopexport.json.Exclusions;
 import roycurtis.signshopexport.json.Record;
 import roycurtis.signshopexport.json.TypeAdapters;
@@ -17,7 +15,7 @@ import java.io.IOException;
 import static roycurtis.signshopexport.SignShopExport.*;
 
 /**
- * Manager class for collecting, serializing and exporting SignShop data.
+ * Manager class for collecting, serializing and exporting shop data.
  *
  * This manager runs it self in a loop using Bukkit's scheduler. This is so it can spread the task
  * of serializing so many signs across server ticks, rather than cause lag spikes every so often.
@@ -34,17 +32,18 @@ class DataManager implements Runnable
         Saving
     }
 
-    private Operation currentOp = Operation.Init;
-    private File      outputFile;
-    private Gson      gson;
+    private Operation  currentOp = Operation.Init;
+    private DataSource dataSource;
+    private File       outputFile;
+    private Gson       gson;
 
     private JsonArray dataSet;
-    private Seller[]  signs;
     private int       current;
     private int       total;
 
-    DataManager()
+    DataManager(DataSource source)
     {
+        dataSource = source;
         outputFile = new File(CONFIG.exportPath);
         gson       = new GsonBuilder()
             .addSerializationExclusionStrategy( new Exclusions() )
@@ -67,15 +66,22 @@ class DataManager implements Runnable
         }
     }
 
-    /** Prepares a copy of SignShop's sellers list for serializing */
+    /** Prepares the source's shops database for serializing */
     private void doInit()
     {
         current = 0;
-        total   = Storage.get().shopCount();
+        total   = dataSource.prepare();
         dataSet = new JsonArray();
-        signs   = Storage.get().getSellers().toArray(new Seller[total]);
 
-        LOGGER.fine("Beginning JSON export of " + total + " entries (1 per tick)");
+        if (total <= 0)
+        {
+            LOGGER.fine( "There are no shops to export. Doing nothing." );
+            LOGGER.fine("Scheduling next check in " + CONFIG.exportInterval * 20 + " ticks");
+            SERVER.getScheduler().runTaskLater(PLUGIN, this, CONFIG.exportInterval * 20);
+            return;
+        }
+
+        LOGGER.fine("Beginning JSON export of " + total + " entries (1 per 2 ticks)");
         currentOp = Operation.Serializing;
         SERVER.getScheduler().runTaskLater(PLUGIN, this, 2);
     }
@@ -85,8 +91,7 @@ class DataManager implements Runnable
     {
         try
         {
-            Seller      sign     = signs[current];
-            Record      signRec  = Record.fromSeller(sign);
+            Record      signRec  = dataSource.createRecordForIndex(current);
             JsonElement signJson = gson.toJsonTree(signRec);
 
             dataSet.add(signJson);
@@ -107,7 +112,7 @@ class DataManager implements Runnable
         else if (current % 10 == 0)
             LOGGER.finer( current + "/" + total + " signs serialized" );
 
-        SERVER.getScheduler().runTaskLater(PLUGIN, this, 2);
+        SERVER.getScheduler().runTaskLater(PLUGIN, this, 20);
     }
 
     /** Export all the processed shop data and schedule next export */
@@ -125,7 +130,8 @@ class DataManager implements Runnable
         finally
         {
             dataSet = null;
-            signs   = null;
+            current = 0;
+            total   = 0;
         }
 
         currentOp = Operation.Init;
