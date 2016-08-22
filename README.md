@@ -1,5 +1,5 @@
-SignShopExport is a Bukkit plugin for 1.10.2+ and SignShop 2.11.0. Its sole function is to generate
-a public database of shops, using a friendlier and more comprehensive format than `sellers.yml`.
+SignShopExport is a Bukkit plugin for 1.10.2+ and either [SignShop 2.11.0][1] or [QuickShop 0.9.22]
+[2]. Its sole function is to export a JSON database of shops, for easy public consumption.
 
 # Links
 
@@ -8,15 +8,12 @@ a public database of shops, using a friendlier and more comprehensive format tha
 
 # Usage
 
-Simply place into your server's `plugins` directory. As long as you also have SignShop 2.11.0 or
-higher, SignShopExport will immediately begin exporting data to the configured JSON file. When it
-is done, it will wait until the next interval to export again.
+Simply place into your server's `plugins` directory. As long as you also have SignShop 2.11.0+
+or QuickShop 0.9.22 (but not both!), SignShopExport will immediately begin exporting data to the
+configured JSON path. When it is done, it will wait until the next interval to export again.
 
 You can set the `exportPath` to somewhere web accessible (e.g. `/var/www`) or you can just create
 a symbolic link to the JSON file itself (e.g. `ln -s /var/mc/data.json /var/www/signshop.json`).
-
-If you need to reload SignShopExport, just reloading SignShop will suffice: `/signshop reload`.
-Reloading the plugin will cause an immediate export and restart the timer.
 
 ## Config
 
@@ -24,6 +21,16 @@ There's only one config file, found at `plugins/SignShopExport/config.yml` with 
 
 * `exportPath` - Path of data file to export, relative to server directory. Can be absolute.
 * `exportInterval` - Seconds between each export, with a minimum of 5 seconds.
+
+## Commands
+
+To reload SignShopExport, do `/signshopexport` in-game or on the console. This will:
+
+* Immediately and safely stop any ongoing exports
+* Reload the configuration file from disk
+* Immediately trigger an export
+
+Using this command requires console, op or the permission `signshopexport.reload`.
 
 # Building
 
@@ -33,44 +40,44 @@ checking if the code builds in your development environment.
 
 ## Command line (Win/Linux)
 
-*Assuming Maven is [installed to or available in PATH](https://maven.apache.org/install.html)*
+*Assuming Maven is [installed to or available in PATH][3]*
 
 1. [Clone this repository using your git client (e.g. 
-`git clone https://github.com/Gamealition/SignShopExport.git`)](http://i.imgur.com/VB7dE6d.png)
+`git clone https://github.com/Gamealition/SignShopExport.git`)][4]
 * Go into repository directory
-* [Execute `mvn clean package`](http://i.imgur.com/UOzULcl.png)
-* [Built jar file will be located in the new `target` directory](http://i.imgur.com/bDGVDwW.png)
+* [Execute `mvn clean package`][5]
+* [Built jar file will be located in the new `target` directory][6]
 
 ## IntelliJ
 
-1. [Clone this repository using your git client](http://i.imgur.com/VB7dE6d.png)
+1. [Clone this repository using your git client][7]
 * In IntelliJ, go to `File > Open`
-* [Navigate to the repository and open the `pom.xml` file](http://i.imgur.com/zcVkyAm.png)
-* [Look for and open the "Maven Projects" tab, expand "SignShopExport" and then "Lifecycle"](http://i.imgur.com/TB3Ab4T.png)
+* [Navigate to the repository and open the `pom.xml` file][8]
+* [Look for and open the "Maven Projects" tab, expand "SignShopExport" and then "Lifecycle"][9]
 * [Double-click "Clean" and wait for the process to finish. This will ensure there are no left-over
-files from previous Maven builds that may interfere with the final build.](http://i.imgur.com/Lx5yPdc.png)
+files from previous Maven builds that may interfere with the final build.][10]
 * Double-click "Package" and wait for the process to finish
-* [Built jar file will be located in the new `target` directory](http://i.imgur.com/bDGVDwW.png)
+* [Built jar file will be located in the new `target` directory][11]
 
 # Debugging
 
 These instructions are for running and debugging SignShopExport from within your development
 environment. These will help you debug SignShopExport and reload code changes as it runs. [Each of
-these steps assumes you have a Bukkit/Spigot/PaperSpigot server locally installed.](http://i.imgur.com/q0B28cR.png)
+these steps assumes you have a Bukkit/Spigot/PaperSpigot server locally installed.][12]
 
 ## IntelliJ
 
-1. [Clone this repository using your git client](http://i.imgur.com/VB7dE6d.png)
+1. [Clone this repository using your git client][13]
 * In IntelliJ, go to `File > Open`
-* [Navigate to the repository and open the `pom.xml` file](http://i.imgur.com/zcVkyAm.png)
+* [Navigate to the repository and open the `pom.xml` file][14]
 * Go to `File > Project Structure... > Artifacts`
-* [Click `Add > JAR > Empty`, then configure as such:](http://i.imgur.com/kXsbr3C.png)
+* [Click `Add > JAR > Empty`, then configure as such:][15]
     * Set Name to "SignShopExport"
     * Set Output directory to the "plugins" folder of your local server
     * Check "Build on make"
 * Right-click "'SignShopExport' compile output" and then click "Put into Output Root", then click OK
 * Go to `Run > Edit Configurations...`
-* [Click `Add New Configuration > JAR Application`, then configure as such:](http://i.imgur.com/smuYOFs.png)
+* [Click `Add New Configuration > JAR Application`, then configure as such:][16]
     * Set Name to "Server" (or "Spigot" or "PaperSpigot", etc)
     * Set Path to JAR to the full path of your local server's executable JAR
         * e.g. `C:\Users\SSEDev\AppData\Local\Programs\Spigot\spigot-1.10.2.jar`
@@ -112,3 +119,20 @@ Then in the root directory of the server, create the file `log4j.xml` with these
   </Loggers>
 </Configuration>
 ```
+
+[1]: http://dev.bukkit.org/bukkit-plugins/signshop/
+[2]: https://dev.bukkit.org/bukkit-plugins/quickshop-notlikeme/
+[3]: https://maven.apache.org/install.html
+[4]: http://i.imgur.com/VB7dE6d.png
+[5]: http://i.imgur.com/UOzULcl.png
+[6]: http://i.imgur.com/bDGVDwW.png
+[7]: http://i.imgur.com/VB7dE6d.png
+[8]: http://i.imgur.com/zcVkyAm.png
+[9]: http://i.imgur.com/TB3Ab4T.png
+[10]: http://i.imgur.com/Lx5yPdc.png
+[11]: http://i.imgur.com/bDGVDwW.png
+[12]: http://i.imgur.com/q0B28cR.png
+[13]: http://i.imgur.com/VB7dE6d.png
+[14]: http://i.imgur.com/zcVkyAm.png
+[15]: http://i.imgur.com/kXsbr3C.png
+[16]: http://i.imgur.com/smuYOFs.png

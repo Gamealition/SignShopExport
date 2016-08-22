@@ -7,10 +7,10 @@
     <!-- Project properties -->
     <groupId>roycurtis.signshopexport</groupId>
     <artifactId>SignShopExport</artifactId>
-    <version>1.10.2-0.0.2</version>
+    <version>1.10.2-0.0.3</version>
 
     <description>
-        Emits a digestible public database of SignShops available on the server
+        Emits a public JSON database of SignShop or QuickShop shops available on the server
     </description>
 
     <!-- Project metadata -->
