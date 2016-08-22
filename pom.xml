@@ -60,6 +60,13 @@
             <version>2.11.0rev2</version>
             <scope>provided</scope>
         </dependency>
+        <!-- QuickShop -->
+        <dependency>
+            <groupId>org.maxgamer.quickshop</groupId>
+            <artifactId>QuickShop</artifactId>
+            <version>0.9.22</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
