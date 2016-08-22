@@ -5,3 +5,15 @@ authors:     [RoyCurtis]
 website:     https://github.com/Gamealition/SignShopExport
 main:        roycurtis.signshopexport.SignShopExport
 softdepend:  [SignShop, QuickShop]
+
+
+commands:
+  signshopexport:
+    description: Reloads SignShopExport's config and triggers an export
+    aliases: [sse]
+    permission: signshopexport.reload
+
+permissions:
+   signshopexport.reload:
+     description: Allows reloading of SignShopExport's config and triggering of export
+     default: op

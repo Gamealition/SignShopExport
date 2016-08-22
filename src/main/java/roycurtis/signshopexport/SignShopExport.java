@@ -1,6 +1,8 @@
 package roycurtis.signshopexport;
 
 import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import roycurtis.signshopexport.quickshop.QSDataSource;
 import roycurtis.signshopexport.signshop.SSDataSource;
@@ -47,7 +49,7 @@ public class SignShopExport extends JavaPlugin
         DATAMANAGER = new DataManager( signShop ? new SSDataSource() : new QSDataSource() );
 
         DATAMANAGER.run();
-        LOGGER.info("To reload this plugin, simply reload SignShop");
+        LOGGER.info("To reload this plugin, do `/signshopexport`");
     }
 
     @Override
@@ -57,5 +59,14 @@ public class SignShopExport extends JavaPlugin
         DATAMANAGER = null;
         SERVER.getScheduler().cancelTasks(this);
         LOGGER.fine("All managers released and tasks cancelled");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender who, Command what, String label, String[] args)
+    {
+        this.setEnabled(false);
+        this.setEnabled(true);
+        who.sendMessage("*** SignShopExport's config reloaded; export triggered");
+        return true;
     }
 }
