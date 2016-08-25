@@ -26,24 +26,24 @@ public class SSDataSource implements DataSource
     /** Creates a record from a SignShop "seller", using SignShop's utility functions for data */
     public Record createRecordForIndex(int idx)
     {
-        Seller   sign  = signs[idx];
-        Record   rec   = new Record();
-        Location loc   = sign.getSignLocation();
-        Sign     state = (Sign) sign.getSign().getState();
+        Seller   seller = signs[idx];
+        Record   rec    = new Record();
+        Location loc    = seller.getSignLocation();
+        Sign     sign   = (Sign) seller.getSign().getState();
 
         rec.locWorld = loc.getWorld().getName();
         rec.locX     = loc.getBlockX();
         rec.locY     = loc.getBlockY();
         rec.locZ     = loc.getBlockZ();
 
-        rec.ownerName = sign.getOwner().getName();
-        rec.ownerUuid = sign.getOwner().GetIdentifier().getStringIdentifier();
+        rec.ownerName = seller.getOwner().getName();
+        rec.ownerUuid = seller.getOwner().GetIdentifier().getStringIdentifier();
 
-        rec.signType  = sign.getOperation();
-        rec.signPrice = economyUtil.parsePrice(state.getLine(3));
-        rec.signText  = new String[] { state.getLine(1), state.getLine(2) };
+        rec.signType  = seller.getOperation();
+        rec.signPrice = economyUtil.parsePrice(sign.getLine(3));
+        rec.signText  = new String[] { sign.getLine(1), sign.getLine(2) };
 
-        rec.invItems = sign.getItems();
+        rec.invItems = seller.getItems();
 
         // This is necessary as the event's items are sometimes CraftItemStack type. That type does
         // not populate its private fields, thus it is useless to Gson's serializer.
@@ -65,13 +65,11 @@ public class SSDataSource implements DataSource
         {
             case "buy":
             case "ibuy":
-                rec.invInStock = itemUtil.stockOKForContainables(
-                    sign.getContainables(), sign.getItems(), true);
+                rec.invInStock = checkStock(seller, true, 0);
                 break;
             case "sell":
             case "isell":
-                rec.invInStock = itemUtil.stockOKForContainables(
-                    sign.getContainables(), sign.getItems(), false);
+                rec.invInStock = checkStock(seller, false, rec.signPrice);
                 break;
             default:
                 rec.invInStock = true;
@@ -79,6 +77,16 @@ public class SSDataSource implements DataSource
         }
 
         return rec;
+    }
+
+    private boolean checkStock(Seller seller, boolean take, double price)
+    {
+        // Check balance of shop owner if sell sign
+        if ( !take && !seller.getOwner().hasMoney(price) )
+            return false;
+
+        // For both signs, check stock space/availability
+        return itemUtil.stockOKForContainables(seller.getContainables(), seller.getItems(), take);
     }
 
     public void free()
