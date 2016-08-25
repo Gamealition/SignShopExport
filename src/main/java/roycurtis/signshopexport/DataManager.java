@@ -112,7 +112,7 @@ class DataManager implements Runnable
         else if (current % 10 == 0)
             LOGGER.finer( current + "/" + total + " signs serialized" );
 
-        SERVER.getScheduler().runTaskLater(PLUGIN, this, 20);
+        SERVER.getScheduler().runTaskLater(PLUGIN, this, 2);
     }
 
     /** Export all the processed shop data and schedule next export */
