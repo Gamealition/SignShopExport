@@ -115,7 +115,7 @@ class DataManager implements Runnable
         SERVER.getScheduler().runTaskLater(PLUGIN, this, 2);
     }
 
-    /** Export all the processed shop data and schedule next export */
+    /** Export all the processed shop data, free resources and schedule next export */
     private void doSave()
     {
         try( FileWriter writer = new FileWriter(outputFile) )
@@ -129,6 +129,7 @@ class DataManager implements Runnable
         }
         finally
         {
+            dataSource.free();
             dataSet = null;
             current = 0;
             total   = 0;

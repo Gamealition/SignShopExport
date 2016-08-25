@@ -68,4 +68,11 @@ public class QSDataSource implements DataSource
 
         return rec;
     }
+
+    public void free()
+    {
+        if (shops != null) shops.clear();
+
+        shops = null;
+    }
 }

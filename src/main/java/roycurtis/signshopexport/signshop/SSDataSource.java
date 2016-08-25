@@ -80,4 +80,9 @@ public class SSDataSource implements DataSource
 
         return rec;
     }
+
+    public void free()
+    {
+        signs = null;
+    }
 }
