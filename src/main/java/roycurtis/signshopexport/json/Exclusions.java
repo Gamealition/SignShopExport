@@ -22,6 +22,8 @@ public class Exclusions implements ExclusionStrategy
             || name.equalsIgnoreCase("data")
             // Ignore hide flags
             || name.equalsIgnoreCase("hideFlag")
+            // Ignore repair costs
+            || name.equalsIgnoreCase("repairCost")
             // Ignore skull profiles
             || name.equalsIgnoreCase("profile")
             // Ignore shield patterns
