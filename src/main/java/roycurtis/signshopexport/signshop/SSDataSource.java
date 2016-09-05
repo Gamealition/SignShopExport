@@ -10,6 +10,8 @@ import org.wargamer2010.signshop.util.itemUtil;
 import roycurtis.signshopexport.DataSource;
 import roycurtis.signshopexport.json.Record;
 
+import java.util.HashMap;
+
 public class SSDataSource implements DataSource
 {
     private Seller[] signs;
@@ -43,23 +45,7 @@ public class SSDataSource implements DataSource
         rec.signPrice = economyUtil.parsePrice(sign.getLine(3));
         rec.signText  = new String[] { sign.getLine(1), sign.getLine(2) };
 
-        rec.invItems = seller.getItems();
-
-        // This is necessary as the event's items are sometimes CraftItemStack type. That type does
-        // not populate its private fields, thus it is useless to Gson's serializer.
-        ItemStack[] plainStack = new ItemStack[rec.invItems.length];
-        for (int i = 0; i < rec.invItems.length; i++)
-        {
-            ItemStack oldItem = rec.invItems[i];
-
-            plainStack[i] = new ItemStack(
-                oldItem.getType(), oldItem.getAmount(), oldItem.getDurability());
-
-            plainStack[i].setData(oldItem.getData());
-            plainStack[i].setItemMeta(oldItem.getItemMeta());
-        }
-
-        rec.invItems = plainStack;
+        rec.invItems = processStacks( seller.getItems() );
 
         switch(rec.signType)
         {
@@ -87,6 +73,42 @@ public class SSDataSource implements DataSource
 
         // For both signs, check stock space/availability
         return itemUtil.stockOKForContainables(seller.getContainables(), seller.getItems(), take);
+    }
+
+    /**
+     * Processes a sign's item stacks by:
+     * * Properly filling in all their private fields
+     * * Combining stacks of same type into one, with proper quantity
+     * @param stacks ItemStacks to process
+     * @return Processed array of ItemStacks
+     */
+    private ItemStack[] processStacks(ItemStack[] stacks)
+    {
+        // Copied from SignShop's itemUtil.itemStackToString()
+        HashMap<ItemStack, Integer> items = new HashMap<>(stacks.length);
+
+        for (ItemStack stack : stacks)
+        {
+            if (stack == null) continue;
+
+            // This is necessary as the sign's items are sometimes CraftItemStack type. That type
+            // does not populate its private fields, thus it is useless to Gson's serializer.
+            ItemStack isBackup = new ItemStack( stack.getType(), 1, stack.getDurability() );
+
+            isBackup.setData( stack.getData() );
+            isBackup.setItemMeta( stack.getItemMeta() );
+
+            int amount = items.containsKey(isBackup)
+                ? items.get(isBackup) + stack.getAmount()
+                : stack.getAmount();
+
+            items.put(isBackup, amount);
+        }
+
+        // Feeds each integer into the item stack's setAmount
+        items.forEach(ItemStack::setAmount);
+
+        return items.keySet().toArray(new ItemStack[ items.size() ]);
     }
 
     public void free()
