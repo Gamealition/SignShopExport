@@ -11,6 +11,7 @@ import roycurtis.signshopexport.json.TypeAdapters;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
 
 import static roycurtis.signshopexport.SignShopExport.*;
 
@@ -89,10 +90,13 @@ class DataManager implements Runnable
     /** Serializes one sign every two ticks */
     private void doSerialize()
     {
+        Record      signRec  = null;
+        JsonElement signJson = null;
+
         try
         {
-            Record      signRec  = dataSource.createRecordForIndex(current);
-            JsonElement signJson = gson.toJsonTree(signRec);
+            signRec  = dataSource.createRecordForIndex(current);
+            signJson = gson.toJsonTree(signRec);
 
             dataSet.add(signJson);
         }
@@ -100,6 +104,15 @@ class DataManager implements Runnable
         {
             LOGGER.info("Skipping sign " + current + " as it failed to serialize. " +
                 "This is likely because it was changed mid-process");
+
+            LOGGER.fine("Details for sign " + current + ":");
+            LOGGER.fine(signRec == null
+                ? "Could not generate record from data source"
+                : signRec.toString() );
+
+            LOGGER.fine("Exception for sign " + current + ": " + e);
+            if ( LOGGER.getLevel().intValue() <= Level.FINE.intValue() )
+                e.printStackTrace();
         }
 
         current++;
