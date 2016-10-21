@@ -23,4 +23,15 @@ public class Record
     // Inventory data
     public ItemStack[] invItems;
     public boolean     invInStock;
+
+    @Override
+    public String toString()
+    {
+        return String.format(
+            "Record: %s sign at %d,%d,%d @ %s by %s (%s)",
+            signType,
+            locX, locY, locZ, locWorld,
+            ownerName, ownerUuid
+        );
+    }
 }
