@@ -80,10 +80,13 @@ public class SSDataSource implements DataSource
      * * Properly filling in all their private fields
      * * Combining stacks of same type into one, with proper quantity
      * @param stacks ItemStacks to process
-     * @return Processed array of ItemStacks
+     * @return Processed array of ItemStacks, or null if given null stacks
      */
     private ItemStack[] processStacks(ItemStack[] stacks)
     {
+        if (stacks == null)
+            return null;
+
         // Copied from SignShop's itemUtil.itemStackToString()
         HashMap<ItemStack, Integer> items = new HashMap<>(stacks.length);
 
