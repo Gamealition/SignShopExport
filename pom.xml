@@ -7,7 +7,7 @@
     <!-- Project properties -->
     <groupId>roycurtis.signshopexport</groupId>
     <artifactId>SignShopExport</artifactId>
-    <version>1.10.2-0.1.2</version>
+    <version>1.11-0.1.2</version>
 
     <description>
         Emits a public JSON database of SignShop or QuickShop shops available on the server
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.10.2-R0.1-SNAPSHOT</version>
+            <version>1.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- GSignShop -->
