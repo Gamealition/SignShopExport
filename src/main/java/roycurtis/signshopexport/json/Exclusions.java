@@ -27,7 +27,9 @@ public class Exclusions implements ExclusionStrategy
             // Ignore skull profiles
             || name.equalsIgnoreCase("profile")
             // Ignore shield patterns
-            || name.equalsIgnoreCase("blockEntityTag");
+            || name.equalsIgnoreCase("blockEntityTag")
+            // Ignore 1.11 unbreakable tag
+            || name.equalsIgnoreCase("unbreakable");
     }
 
     @Override
