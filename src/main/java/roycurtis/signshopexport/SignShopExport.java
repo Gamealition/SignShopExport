@@ -3,6 +3,7 @@ package roycurtis.signshopexport;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import roycurtis.signshopexport.quickshop.QSDataSource;
 import roycurtis.signshopexport.signshop.SSDataSource;
@@ -29,24 +30,26 @@ public class SignShopExport extends JavaPlugin
     @Override
     public void onEnable()
     {
-        boolean signShop  = getServer().getPluginManager().getPlugin("SignShop")  != null;
-        boolean quickShop = getServer().getPluginManager().getPlugin("QuickShop") != null;
+        Plugin  signShop     = getServer().getPluginManager().getPlugin("SignShop");
+        Plugin  quickShop    = getServer().getPluginManager().getPlugin("QuickShop");
+        boolean hasSignShop  = signShop  != null && signShop.isEnabled();
+        boolean hasQuickShop = quickShop != null && quickShop.isEnabled();
 
-        if (!signShop && !quickShop)
+        if (!hasSignShop && !hasQuickShop)
         {
-            LOGGER.warning("Neither SignShop nor QuickShop are loaded.");
+            LOGGER.warning("Neither SignShop nor QuickShop are loaded or enabled.");
             LOGGER.warning("SignShopExport will do nothing.");
             return;
         }
-        else if (signShop && quickShop)
+        else if (hasSignShop && hasQuickShop)
         {
-            LOGGER.warning("Both SignShop and QuickShop are loaded.");
+            LOGGER.warning("Both SignShop and QuickShop are loaded and enabled.");
             LOGGER.warning("SignShopExport will do nothing, as it cannot handle both.");
             return;
         }
 
         CONFIG      = new Config();
-        DATAMANAGER = new DataManager( signShop ? new SSDataSource() : new QSDataSource() );
+        DATAMANAGER = new DataManager( hasSignShop ? new SSDataSource() : new QSDataSource() );
 
         DATAMANAGER.run();
         LOGGER.info("To reload this plugin, do `/signshopexport`");
