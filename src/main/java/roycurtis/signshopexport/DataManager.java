@@ -82,12 +82,12 @@ class DataManager implements Runnable
             return;
         }
 
-        LOGGER.fine("Beginning JSON export of " + total + " entries (1 per 2 ticks)");
+        LOGGER.fine("Beginning JSON export of " + total + " entries (1 per tick)");
         currentOp = Operation.Serializing;
-        SERVER.getScheduler().runTaskLater(PLUGIN, this, 2);
+        SERVER.getScheduler().runTaskLater(PLUGIN, this, 1);
     }
 
-    /** Serializes one sign every two ticks */
+    /** Serializes one sign every tick */
     private void doSerialize()
     {
         Record      signRec  = null;
@@ -125,7 +125,7 @@ class DataManager implements Runnable
         else if (current % 10 == 0)
             LOGGER.finer( current + "/" + total + " signs serialized" );
 
-        SERVER.getScheduler().runTaskLater(PLUGIN, this, 2);
+        SERVER.getScheduler().runTaskLater(PLUGIN, this, 1);
     }
 
     /** Export all the processed shop data, free resources and schedule next export */
