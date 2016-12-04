@@ -20,6 +20,8 @@ a symbolic link to the JSON file itself (e.g. `ln -s /var/mc/data.json /var/www/
 There's only one config file, found at `plugins/SignShopExport/config.yml` with these options:
 
 * `exportPath` - Path of data file to export, relative to server directory. Can be absolute.
+* `exportMinPath` - Path of minified data file to export, relative to server directory. The
+ minified output is useful for reduced bandwidth usage. Can be absolute.
 * `exportInterval` - Seconds between each export, with a minimum of 5 seconds.
 
 ## Commands

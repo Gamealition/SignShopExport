@@ -1,9 +1,11 @@
 package roycurtis.signshopexport;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.stream.JsonWriter;
 import roycurtis.signshopexport.json.Exclusions;
 import roycurtis.signshopexport.json.Record;
 import roycurtis.signshopexport.json.TypeAdapters;
@@ -36,6 +38,7 @@ class DataManager implements Runnable
     private Operation  currentOp = Operation.Init;
     private DataSource dataSource;
     private File       outputFile;
+    private File       outputMinFile;
     private Gson       gson;
 
     private JsonArray dataSet;
@@ -44,16 +47,19 @@ class DataManager implements Runnable
 
     DataManager(DataSource source)
     {
-        dataSource = source;
-        outputFile = new File(CONFIG.exportPath);
-        gson       = new GsonBuilder()
+        dataSource    = source;
+        outputFile    = new File(CONFIG.exportPath);
+        outputMinFile = new File(CONFIG.exportMinPath);
+        gson          = new GsonBuilder()
             .addSerializationExclusionStrategy( new Exclusions() )
             .registerTypeAdapterFactory( new TypeAdapters() )
-            .setPrettyPrinting()
             .create();
 
         if ( outputFile.exists() && !outputFile.isFile() )
             throw new RuntimeException("outputPath config points to a directory/invalid file");
+
+        if ( outputMinFile.exists() && !outputMinFile.isFile() )
+            throw new RuntimeException("outputMinPath config points to a directory/invalid file");
     }
 
     /** Generates data file of entire SignShop database across server ticks */
@@ -131,26 +137,35 @@ class DataManager implements Runnable
     /** Export all the processed shop data, free resources and schedule next export */
     private void doSave()
     {
-        try( FileWriter writer = new FileWriter(outputFile) )
+        doSaveFile(outputFile, false);
+        doSaveFile(outputMinFile, true);
+
+        dataSource.free();
+        dataSet = null;
+        current = 0;
+        total   = 0;
+
+        currentOp = Operation.Init;
+        LOGGER.fine("Scheduling next export in " + CONFIG.exportInterval * 20 + " ticks");
+        SERVER.getScheduler().runTaskLater(PLUGIN, this, CONFIG.exportInterval * 20);
+    }
+
+    private void doSaveFile(File file, boolean minified)
+    {
+        try (
+            FileWriter fWriter = new FileWriter(file);
+            JsonWriter jWriter = new JsonWriter(fWriter)
+        )
         {
-            gson.toJson(dataSet, writer);
-            LOGGER.fine("Json saved with " + dataSet.size() + " shops");
+            if (!minified)
+                jWriter.setIndent("  ");
+
+            gson.toJson(dataSet, jWriter);
+            LOGGER.fine( "Json file exported to " + file.getAbsolutePath() );
         }
         catch (IOException e)
         {
             throw new RuntimeException("Could not save json file", e);
         }
-        finally
-        {
-            dataSource.free();
-            dataSet = null;
-            current = 0;
-            total   = 0;
-        }
-
-        currentOp = Operation.Init;
-        LOGGER.fine( "Json file exported to " + outputFile.getAbsolutePath() );
-        LOGGER.fine("Scheduling next export in " + CONFIG.exportInterval * 20 + " ticks");
-        SERVER.getScheduler().runTaskLater(PLUGIN, this, CONFIG.exportInterval * 20);
     }
 }

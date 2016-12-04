@@ -8,10 +8,12 @@ import static roycurtis.signshopexport.SignShopExport.PLUGIN;
 /** Container and manager class for plugin's configuration values */
 class Config
 {
-    Configuration config;
+    private Configuration config;
 
     /** Path of data file to export, relative to server directory or absolute */
     String exportPath     = "plugins/SignShopExport/data.json";
+    /** Path of minified data file to export, relative to server directory or absolute */
+    String exportMinPath  = "plugins/SignShopExport/data.min.json";
     /** Seconds between each export */
     int    exportInterval = 1800;
 
@@ -23,6 +25,7 @@ class Config
         config = PLUGIN.getConfig();
 
         exportPath     = config.getString("exportPath", exportPath);
+        exportMinPath  = config.getString("exportMinPath", exportMinPath);
         exportInterval = config.getInt("exportInterval", exportInterval);
 
         if (exportInterval < 5)

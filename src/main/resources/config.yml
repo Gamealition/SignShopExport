@@ -4,5 +4,9 @@
 # (default: plugins/SignShopExport/data.json)
 exportPath: "plugins/SignShopExport/data.json"
 
+# Path of minified data file to export, relative to server directory. Can be absolute.
+# (default: plugins/SignShopExport/data.min.json)
+exportMinPath: "plugins/SignShopExport/data.min.json"
+
 # Seconds between each export (default: 1800, or 30 minutes)
 exportInterval: 1800
