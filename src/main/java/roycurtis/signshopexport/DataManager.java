@@ -1,6 +1,5 @@
 package roycurtis.signshopexport;
 
-import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -106,7 +105,7 @@ class DataManager implements Runnable
 
             dataSet.add(signJson);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
             LOGGER.info("Skipping sign " + current + " as it failed to serialize. " +
                 "This is likely because it was changed mid-process");
@@ -116,9 +115,7 @@ class DataManager implements Runnable
                 ? "Could not generate record from data source"
                 : signRec.toString() );
 
-            LOGGER.fine("Exception for sign " + current + ": " + e);
-            if ( LOGGER.getLevel().intValue() <= Level.FINE.intValue() )
-                e.printStackTrace();
+            LOGGER.log(Level.FINE, "Exception for sign " + current, ex);
         }
 
         current++;
