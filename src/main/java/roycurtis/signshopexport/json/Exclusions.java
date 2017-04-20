@@ -3,33 +3,38 @@ package roycurtis.signshopexport.json;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 
+import java.util.Arrays;
+
 /** Exclusions class for blacklisting objects and fields in Gson */
 public class Exclusions implements ExclusionStrategy
 {
+    private static final String[] SKIPPED_FIELDS = new String[]
+    {
+        // Ignore dynamic CraftBukkit handle field
+        "handle",
+        // Ignore book page contents
+        "pages",
+        // Ignore unsupported tags
+        "unhandledTags",
+        // Ignore redundant data object
+        "data",
+        // Ignore hide flags
+        "hideFlag",
+        // Ignore repair costs
+        "repairCost",
+        // Ignore skull profiles
+        "profile",
+        // Ignore shield patterns
+        "blockEntityTag",
+        // Ignore 1.11 unbreakable tag
+        "unbreakable"
+    };
+
     @Override
     public boolean shouldSkipField(FieldAttributes f)
     {
-        String name = f.getName();
-
-        return
-            // Ignore dynamic CraftBukkit handle field
-            name.equalsIgnoreCase("handle")
-            // Ignore book page contents
-            || name.equalsIgnoreCase("pages")
-            // Ignore unsupported tags
-            || name.equalsIgnoreCase("unhandledTags")
-            // Ignore redundant data object
-            || name.equalsIgnoreCase("data")
-            // Ignore hide flags
-            || name.equalsIgnoreCase("hideFlag")
-            // Ignore repair costs
-            || name.equalsIgnoreCase("repairCost")
-            // Ignore skull profiles
-            || name.equalsIgnoreCase("profile")
-            // Ignore shield patterns
-            || name.equalsIgnoreCase("blockEntityTag")
-            // Ignore 1.11 unbreakable tag
-            || name.equalsIgnoreCase("unbreakable");
+        return Arrays.stream(SKIPPED_FIELDS)
+            .anyMatch( s -> s.equalsIgnoreCase( f.getName() ) );
     }
 
     @Override
@@ -37,10 +42,12 @@ public class Exclusions implements ExclusionStrategy
     {
         String name = clazz.getSimpleName();
 
+        // Skips vanilla ItemStacks, preferring Bukkit ones instead
         if ( name.equalsIgnoreCase("ItemStack") )
         if ( clazz.getTypeName().startsWith("net.minecraft.server") )
             return true;
 
+        // Skip strings in books, etc
         return name.equalsIgnoreCase("ChatComponentText");
     }
 }
