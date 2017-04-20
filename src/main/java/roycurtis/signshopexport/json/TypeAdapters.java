@@ -28,6 +28,11 @@ public class TypeAdapters implements TypeAdapterFactory
         if ( name.equalsIgnoreCase("CraftMetaEnchantedBook") )
             return new JsonCraftMetaEnchantedBook<>();
 
+        // org.bukkit.craftbukkit.v1_11_R1.inventory.CraftMetaMap
+        // Needed because Gson chokes on duplicate `locNae` field
+        if ( name.equalsIgnoreCase("CraftMetaMap") )
+            return new JsonMetaMap<>();
+
         return null;
     }
 

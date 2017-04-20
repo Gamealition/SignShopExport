@@ -49,8 +49,8 @@ class JsonCraftMetaEnchantedBook<T> extends TypeAdapter<T>
         out.endObject();
     }
 
-    @Override
     /** Not necessary; we're never going to read these */
+    @Override
     public T read(JsonReader in) throws IOException
     {
         return null;
