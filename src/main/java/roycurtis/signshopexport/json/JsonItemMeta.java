@@ -15,8 +15,11 @@ class JsonItemMeta<T> extends TypeAdapter<T>
     @Override
     public void write(JsonWriter out, T value) throws IOException
     {
-        // Handle nulls (sometimes possible, if item has no meta)
-        if (value == null)
+        // We should only reach here if T is indeed an ItemMeta
+        ItemMeta meta = (ItemMeta) value;
+
+        // This optimizes away "'meta': {}" from a lot of items
+        if ( isEmpty(meta) )
         {
             out.nullValue();
             return;
@@ -24,34 +27,44 @@ class JsonItemMeta<T> extends TypeAdapter<T>
 
         out.beginObject();
 
-        handleGeneral(out, (ItemMeta) value);
-        handleEnchants(out, (ItemMeta) value);
+        handleGeneral(out, meta);
+        handleEnchants(out, meta);
 
-        if (value instanceof BannerMeta)
+        if      (value instanceof BannerMeta)
             handleBanner(out, (BannerMeta) value);
-
-        if (value instanceof FireworkMeta)
+        else if (value instanceof FireworkMeta)
             handleFirework(out, (FireworkMeta) value);
-
-        if (value instanceof FireworkEffectMeta)
+        else if (value instanceof FireworkEffectMeta)
             handleFireworkEffect(out, (FireworkEffectMeta) value);
-
-        if (value instanceof LeatherArmorMeta)
+        else if (value instanceof LeatherArmorMeta)
             handleLeatherArmor(out, (LeatherArmorMeta) value);
-
-        if (value instanceof MapMeta)
+        else if (value instanceof MapMeta)
             handleMaps(out, (MapMeta) value);
-
-        if (value instanceof PotionMeta)
+        else if (value instanceof PotionMeta)
             handlePotions(out, (PotionMeta) value);
-
-        if (value instanceof SkullMeta)
+        else if (value instanceof SkullMeta)
             handleSkull(out, (SkullMeta) value);
-
-        if (value instanceof SpawnEggMeta)
+        else if (value instanceof SpawnEggMeta)
             handleSpawnEgg(out, (SpawnEggMeta) value);
 
         out.endObject();
+    }
+
+    /** Checks if meta is effectively empty (e.g. not an item that typically holds data) */
+    private boolean isEmpty(ItemMeta meta)
+    {
+        return !meta.hasDisplayName()
+            && !meta.hasLore()
+            && !meta.hasEnchants()
+            && !(meta instanceof BannerMeta)
+            && !(meta instanceof EnchantmentStorageMeta)
+            && !(meta instanceof FireworkMeta)
+            && !(meta instanceof FireworkEffectMeta)
+            && !(meta instanceof LeatherArmorMeta)
+            && !(meta instanceof MapMeta)
+            && !(meta instanceof PotionMeta)
+            && !(meta instanceof SkullMeta)
+            && !(meta instanceof SpawnEggMeta);
     }
 
     private void handleGeneral(JsonWriter out, ItemMeta meta) throws IOException
