@@ -9,6 +9,8 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 import java.io.IOException;
 import java.util.List;
@@ -177,7 +179,7 @@ class JsonItemMeta<T> extends TypeAdapter<T>
         out.name("type").value( fx.getType().toString() );
     }
 
-    /** Handles RGB color of leather armor pieces */
+    /** Handles leather armor pieces' RGB colors */
     private void handleLeatherArmor(JsonWriter out, LeatherArmorMeta meta) throws IOException
     {
         Color color = meta.getColor();
@@ -190,6 +192,7 @@ class JsonItemMeta<T> extends TypeAdapter<T>
                .name("armorColorB").value( color.getBlue() );
     }
 
+    /** Handles maps' location names and custom colors */
     private void handleMaps(JsonWriter out, MapMeta meta) throws IOException
     {
         if ( meta.hasLocationName() )
@@ -201,9 +204,29 @@ class JsonItemMeta<T> extends TypeAdapter<T>
                .name("mapColorB").value( meta.getColor().getBlue() );
     }
 
+    /** Handles potions' basic data and counts custom effects */
     private void handlePotions(JsonWriter out, PotionMeta meta) throws IOException
     {
+        PotionData base = meta.getBasePotionData();
 
+        if (base != null)
+        {
+            PotionType type = base.getType();
+
+            if (type != null)
+                out.name("type").value( type.toString() );
+
+            out.name("extended").value( base.isExtended() );
+            out.name("upgraded").value( base.isUpgraded() );
+        }
+
+        if ( meta.hasColor() )
+            out.name("potionColorR").value( meta.getColor().getRed() )
+               .name("potionColorG").value( meta.getColor().getGreen() )
+               .name("potionColorB").value( meta.getColor().getBlue() );
+
+        if ( meta.hasCustomEffects() )
+            out.name("customEffectCount").value( meta.getCustomEffects().size() );
     }
 
     private void handleSkull(JsonWriter out, SkullMeta meta) throws IOException
