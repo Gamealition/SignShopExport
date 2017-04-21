@@ -171,10 +171,13 @@ class JsonItemMeta<T> extends TypeAdapter<T>
     private void handleMaps(JsonWriter out, MapMeta meta) throws IOException
     {
         if ( meta.hasLocationName() )
-            out.name("location").value( meta.getLocationName() );
+            out.name("locName").value( meta.getLocationName() );
 
         if ( meta.hasColor() )
-            out.name("color").value( meta.getColor().toString() );
+            out.name("mapColorR").value( meta.getColor().getRed() )
+               .name("mapColorG").value( meta.getColor().getGreen() )
+               .name("mapColorB").value( meta.getColor().getBlue() );
+
     }
 
     private void handlePotions(JsonWriter out, PotionMeta meta) throws IOException
