@@ -4,6 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.*;
@@ -153,14 +154,26 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             out.name("baseColor").value( baseColor.toString() );
     }
 
+    /** Handles fireworks; only power and effect count, if any */
     private void handleFirework(JsonWriter out, FireworkMeta meta) throws IOException
     {
+        out.name("power").value( meta.getPower() );
 
+        if ( meta.hasEffects() )
+            out.name("effectCount").value( meta.getEffectsSize() );
     }
 
+    /** Handles firework effect items (e.g. firework charges). No colors (too verbose) */
     private void handleFireworkEffect(JsonWriter out, FireworkEffectMeta meta) throws IOException
     {
+        if ( !meta.hasEffect() )
+            return;
 
+        FireworkEffect fx = meta.getEffect();
+
+        out.name("flicker").value( fx.hasFlicker() );
+        out.name("trail").value( fx.hasTrail() );
+        out.name("type").value( fx.getType().toString() );
     }
 
     private void handleLeatherArmor(JsonWriter out, LeatherArmorMeta meta) throws IOException
@@ -177,7 +190,6 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             out.name("mapColorR").value( meta.getColor().getRed() )
                .name("mapColorG").value( meta.getColor().getGreen() )
                .name("mapColorB").value( meta.getColor().getBlue() );
-
     }
 
     private void handlePotions(JsonWriter out, PotionMeta meta) throws IOException
