@@ -187,9 +187,9 @@ class JsonItemMeta<T> extends TypeAdapter<T>
         if (color == null)
             return;
         else
-            out.name("armorColorR").value( color.getRed() )
-               .name("armorColorG").value( color.getGreen() )
-               .name("armorColorB").value( color.getBlue() );
+            out.name("colorR").value( color.getRed() )
+               .name("colorG").value( color.getGreen() )
+               .name("colorB").value( color.getBlue() );
     }
 
     /** Handles maps' location names and custom colors */
@@ -199,9 +199,9 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             out.name("locName").value( meta.getLocationName() );
 
         if ( meta.hasColor() )
-            out.name("mapColorR").value( meta.getColor().getRed() )
-               .name("mapColorG").value( meta.getColor().getGreen() )
-               .name("mapColorB").value( meta.getColor().getBlue() );
+            out.name("colorR").value( meta.getColor().getRed() )
+               .name("colorG").value( meta.getColor().getGreen() )
+               .name("colorB").value( meta.getColor().getBlue() );
     }
 
     /** Handles potions' basic data and counts custom effects */
@@ -221,9 +221,9 @@ class JsonItemMeta<T> extends TypeAdapter<T>
         }
 
         if ( meta.hasColor() )
-            out.name("potionColorR").value( meta.getColor().getRed() )
-               .name("potionColorG").value( meta.getColor().getGreen() )
-               .name("potionColorB").value( meta.getColor().getBlue() );
+            out.name("colorR").value( meta.getColor().getRed() )
+               .name("colorG").value( meta.getColor().getGreen() )
+               .name("colorB").value( meta.getColor().getBlue() );
 
         if ( meta.hasCustomEffects() )
             out.name("customEffectCount").value( meta.getCustomEffects().size() );
