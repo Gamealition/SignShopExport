@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Adapter factory for explaining to Gson how to serialize some Minecraft objects.
@@ -16,22 +17,14 @@ public class TypeAdapters implements TypeAdapterFactory
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
     {
-        String name = type.getRawType().getSimpleName();
-
         // org.bukkit.craftbukkit.v1_10_R1.inventory.CraftMetaItem.EnchantmentMap
         // Needed because Gson does not serialize this very nicely
-        if ( name.equalsIgnoreCase("EnchantmentMap") )
-            return new JsonEnchantmentMap<>();
+//        if ( type.getRawType().getSimpleName().equalsIgnoreCase("EnchantmentMap") )
+//            return new JsonEnchantmentMap<>();
 
-        // org.bukkit.craftbukkit.v1_10_R1.inventory.CraftMetaEnchantedBook
-        // Needed because Gson chokes on duplicate `enchantments` field
-        if ( name.equalsIgnoreCase("CraftMetaEnchantedBook") )
-            return new JsonCraftMetaEnchantedBook<>();
-
-        // org.bukkit.craftbukkit.v1_11_R1.inventory.CraftMetaMap
-        // Needed because Gson chokes on duplicate `locNae` field
-        if ( name.equalsIgnoreCase("CraftMetaMap") )
-            return new JsonMetaMap<>();
+        // Needed to handle various subtypes of ItemMeta
+        if ( ItemMeta.class.isAssignableFrom( type.getRawType() ) )
+            return new JsonItemMeta<>();
 
         return null;
     }
