@@ -3,13 +3,20 @@ package roycurtis.signshopexport.json;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import org.bukkit.DyeColor;
+import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
-/** Type adapter to convert ItemMeta subtypes to JSON */
+/**
+ * Type adapter to convert ItemMeta subtypes to JSON. This is a TypeAdapter instead of a
+ * {@link com.google.gson.JsonSerializer}, because this allows us to write JSON using a Writer; a
+ * faster and more memory efficient (i.e. less garbage) but less flexible method.
+ */
 class JsonItemMeta<T> extends TypeAdapter<T>
 {
     @Override
@@ -18,7 +25,8 @@ class JsonItemMeta<T> extends TypeAdapter<T>
         // We should only reach here if T is indeed an ItemMeta
         ItemMeta meta = (ItemMeta) value;
 
-        // This optimizes away "'meta': {}" from a lot of items
+        // This optimizes away "'meta': {}" from a lot of items. Violates DRY but we can't simply
+        // begin a JSON object and then cancel it mid-checks.
         if ( isEmpty(meta) )
         {
             out.nullValue();
@@ -67,6 +75,7 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             && !(meta instanceof SpawnEggMeta);
     }
 
+    /** Handles generic metadata (e.g. custom names, lore) */
     private void handleGeneral(JsonWriter out, ItemMeta meta) throws IOException
     {
         if ( meta.hasDisplayName() )
@@ -86,7 +95,7 @@ class JsonItemMeta<T> extends TypeAdapter<T>
     }
 
     /**
-     * Enchanted items have enchants in two separate locations:
+     * Handles enchanted items. Enchants are stored in one of two separate locations:
      *
      * * ItemMeta.getEnchants() - If it's an enchanted item (e.g. sword)
      * * EnchantmentStorageMeta.getStoredEnchants() - If it's an enchanted book
@@ -124,9 +133,24 @@ class JsonItemMeta<T> extends TypeAdapter<T>
         out.endObject();
     }
 
+    /** Handles banners; only base color (as patterns would be too much data) */
     private void handleBanner(JsonWriter out, BannerMeta meta) throws IOException
     {
+        DyeColor baseColor = meta.getBaseColor();
 
+        // Due to SPIGOT-746, we sometimes have to get the base color from pattern 0...
+        if (baseColor == null)
+        {
+            List<Pattern> patterns = meta.getPatterns();
+
+            if (patterns.size() <= 0)
+                return;
+            else
+                baseColor = patterns.get(0).getColor();
+        }
+
+        if (baseColor != null)
+            out.name("baseColor").value( baseColor.toString() );
     }
 
     private void handleFirework(JsonWriter out, FireworkMeta meta) throws IOException
