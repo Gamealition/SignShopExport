@@ -229,9 +229,11 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             out.name("customEffectCount").value( meta.getCustomEffects().size() );
     }
 
+    /** Handles custom player skulls */
     private void handleSkull(JsonWriter out, SkullMeta meta) throws IOException
     {
-
+        if ( meta.hasOwner() )
+            out.name("owner").value( meta.getOwner() );
     }
 
     private void handleSpawnEgg(JsonWriter out, SpawnEggMeta meta) throws IOException
