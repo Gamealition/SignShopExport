@@ -3,6 +3,7 @@ package roycurtis.signshopexport.json;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.block.banner.Pattern;
@@ -176,9 +177,17 @@ class JsonItemMeta<T> extends TypeAdapter<T>
         out.name("type").value( fx.getType().toString() );
     }
 
+    /** Handles RGB color of leather armor pieces */
     private void handleLeatherArmor(JsonWriter out, LeatherArmorMeta meta) throws IOException
     {
+        Color color = meta.getColor();
 
+        if (color == null)
+            return;
+        else
+            out.name("armorColorR").value( color.getRed() )
+               .name("armorColorG").value( color.getGreen() )
+               .name("armorColorB").value( color.getBlue() );
     }
 
     private void handleMaps(JsonWriter out, MapMeta meta) throws IOException
