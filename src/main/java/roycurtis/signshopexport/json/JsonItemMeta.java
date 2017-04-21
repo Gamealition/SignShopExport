@@ -236,9 +236,11 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             out.name("owner").value( meta.getOwner() );
     }
 
+    /** Handles mob spawn eggs */
     private void handleSpawnEgg(JsonWriter out, SpawnEggMeta meta) throws IOException
     {
-
+        if (meta.getSpawnedType() != null)
+            out.name("type").value( meta.getSpawnedType().toString() );
     }
 
     /** Not necessary; we're never going to read these */
