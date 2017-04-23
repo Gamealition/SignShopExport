@@ -44,6 +44,8 @@ class JsonItemMeta<T> extends TypeAdapter<T>
 
         if      (value instanceof BannerMeta)
             handleBanner(out, (BannerMeta) value);
+        else if (value instanceof BookMeta)
+            handleBook(out, (BookMeta) value);
         else if (value instanceof FireworkMeta)
             handleFirework(out, (FireworkMeta) value);
         else if (value instanceof FireworkEffectMeta)
@@ -69,6 +71,7 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             && !meta.hasLore()
             && !meta.hasEnchants()
             && !(meta instanceof BannerMeta)
+            && !(meta instanceof BookMeta)
             && !(meta instanceof EnchantmentStorageMeta)
             && !(meta instanceof FireworkMeta)
             && !(meta instanceof FireworkEffectMeta)
@@ -157,6 +160,22 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             out.name("baseColor").value( baseColor.toString() );
     }
 
+    /** Handles books; metadata and page count (but not content) */
+    private void handleBook(JsonWriter out, BookMeta meta) throws IOException
+    {
+        if ( meta.hasAuthor() )
+            out.name("author").value( meta.getAuthor() );
+
+        if ( meta.hasTitle() )
+            out.name("title").value( meta.getTitle() );
+
+        if ( meta.hasGeneration() )
+            out.name("generation").value( meta.getGeneration().toString() );
+
+        if ( meta.hasPages() )
+            out.name("pages").value( meta.getPageCount() );
+    }
+
     /** Handles fireworks; only power and effect count, if any */
     private void handleFirework(JsonWriter out, FireworkMeta meta) throws IOException
     {
@@ -184,9 +203,7 @@ class JsonItemMeta<T> extends TypeAdapter<T>
     {
         Color color = meta.getColor();
 
-        if (color == null)
-            return;
-        else
+        if (color != null)
             out.name("colorR").value( color.getRed() )
                .name("colorG").value( color.getGreen() )
                .name("colorB").value( color.getBlue() );
