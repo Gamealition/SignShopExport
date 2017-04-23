@@ -17,11 +17,6 @@ public class TypeAdapters implements TypeAdapterFactory
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
     {
-        // org.bukkit.craftbukkit.v1_10_R1.inventory.CraftMetaItem.EnchantmentMap
-        // Needed because Gson does not serialize this very nicely
-//        if ( type.getRawType().getSimpleName().equalsIgnoreCase("EnchantmentMap") )
-//            return new JsonEnchantmentMap<>();
-
         // Needed to handle various subtypes of ItemMeta
         if ( ItemMeta.class.isAssignableFrom( type.getRawType() ) )
             return new JsonItemMeta<>();
