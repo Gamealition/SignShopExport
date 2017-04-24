@@ -30,8 +30,8 @@ public class SignShopExport extends JavaPlugin
     @Override
     public void onEnable()
     {
-        Plugin  signShop     = getServer().getPluginManager().getPlugin("SignShop");
-        Plugin  quickShop    = getServer().getPluginManager().getPlugin("QuickShop");
+        Plugin  signShop     = SERVER.getPluginManager().getPlugin("SignShop");
+        Plugin  quickShop    = SERVER.getPluginManager().getPlugin("QuickShop");
         boolean hasSignShop  = signShop  != null && signShop.isEnabled();
         boolean hasQuickShop = quickShop != null && quickShop.isEnabled();
 

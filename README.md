@@ -1,5 +1,5 @@
-SignShopExport is a Bukkit plugin for 1.10.2+ and either [SignShop 2.11.0][1] or [QuickShop 0.9.22]
-[2]. Its sole function is to export a JSON database of shops, for easy public consumption.
+SignShopExport is a Bukkit plugin for 1.10.2+ and either [SignShop 2.11.0][1] or
+[QuickShop 0.9.22][2]. Its sole function is to export a JSON database of shops, for public use.
 
 # Links
 
@@ -14,6 +14,9 @@ configured JSON path. When it is done, it will wait until the next interval to e
 
 You can set the `exportPath` to somewhere web accessible (e.g. `/var/www`) or you can just create
 a symbolic link to the JSON file itself (e.g. `ln -s /var/mc/data.json /var/www/signshop.json`).
+
+To understand how to parse the data, see [docs/FORMAT.md][4]. The data exported will include only
+_some_ of the metadata for a shop's items (e.g. books will only show page count, not contents). 
 
 ## Config
 
@@ -43,7 +46,9 @@ For instructions and screenshots on how to. . .
 * Debug this plugin on a server
 * Enable debug logging levels such as `FINE` and `FINER`
 
-. . .[please follow the linked guide on this Google document.](https://docs.google.com/document/d/1TTDXG7IZ9M0D2-rzbILAWg1CKjynHK8fNGxbf3W4wBk/view)
+. . .[please follow the linked guide on this Google document.][3]
 
 [1]: http://dev.bukkit.org/bukkit-plugins/signshop/
 [2]: https://dev.bukkit.org/bukkit-plugins/quickshop-notlikeme/
+[3]: https://docs.google.com/document/d/1TTDXG7IZ9M0D2-rzbILAWg1CKjynHK8fNGxbf3W4wBk/view
+[4]: https://github.com/Gamealition/SignShopExport/tree/master/docs/FORMAT.md
