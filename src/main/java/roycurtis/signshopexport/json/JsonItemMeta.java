@@ -173,7 +173,7 @@ class JsonItemMeta<T> extends TypeAdapter<T>
             out.name("generation").value( meta.getGeneration().toString() );
 
         if ( meta.hasPages() )
-            out.name("pages").value( meta.getPageCount() );
+            out.name("pageCount").value( meta.getPageCount() );
     }
 
     /** Handles fireworks; only power and effect count, if any */
