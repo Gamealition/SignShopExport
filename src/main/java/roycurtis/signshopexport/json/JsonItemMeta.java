@@ -158,6 +158,8 @@ class JsonItemMeta<T> extends TypeAdapter<T>
 
         if (baseColor != null)
             out.name("baseColor").value( baseColor.toString() );
+
+        out.name("patternCount").value( meta.numberOfPatterns() );
     }
 
     /** Handles books; metadata and page count (but not content) */
