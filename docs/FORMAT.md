@@ -13,6 +13,7 @@ Each shop sign is represented by an object, that _always_ contains the following
     * . . .if using **QuickShop**:
         * `true` if `buy` type and has stock available
         * `true` if `sell` type and has free space available
+* `id` - Sign's unique ID number, calculated from world and position coordinates
 * `locWorld` - Sign's world
 * `locX` - Sign's integer X block position
 * `locY` - Sign's integer Y block position

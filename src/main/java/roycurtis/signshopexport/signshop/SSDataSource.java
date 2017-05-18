@@ -37,6 +37,7 @@ public class SSDataSource implements DataSource
         rec.locX     = loc.getBlockX();
         rec.locY     = loc.getBlockY();
         rec.locZ     = loc.getBlockZ();
+        rec.id       = rec.hashCode();
 
         rec.ownerName = seller.getOwner().getName();
         rec.ownerUuid = seller.getOwner().GetIdentifier().getStringIdentifier();
