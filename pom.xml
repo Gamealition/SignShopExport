@@ -36,12 +36,10 @@
             <id>spigot</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/public/</url>
         </repository>
-        <!-- Local SSE-specific repository for non-Maven dependencies -->
-        <!-- See https://devcenter.heroku.com/articles/local-maven-dependencies -->
+        <!-- For GSignShop and QuickShop -->
         <repository>
-            <id>project.local</id>
-            <name>project</name>
-            <url>file:${project.basedir}/libs</url>
+            <id>gamealition</id>
+            <url>https://gamealition.github.io/Dependencies/</url>
         </repository>
     </repositories>
 
